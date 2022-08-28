@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./cq.css">
+		<script src="./cq.js"></script>
+		<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	</head>
+	<body>
+		
+		<div id="d0">
+
+		</div>
+
+		<div id="d1">
+			<div class="textdiv"></div>
+			<div class="divimgda">
+
+			</div>
+		</div>
+		<div id="d2">
+			<input type="checkbox" value="隐藏片名" id="boxcheck" onclick="boxc(this)">
+			<p>隐藏片名</p>
+			<button class="custom-btn btn-14" onclick="toImage()">保存为png</button>
+
+
+		</div>
+		<div id="d3">
+			<p>更新日志：</p>
+			<p>2022.08.28 全部</p>
+		</div>
+
+	</body>
+
+	<script>
+		
+
+
+		var keys = Object.keys(arr)
+
+		div0 = document.querySelector("#d0")
+
+
+		for (var i = 0; i < keys.length; i++) {
+			ss = shengchengrenwujianjia(keys[i], arr[keys[i]])
+			div0.innerHTML += ss
+
+		}
+
+		div = div0.firstElementChild
+		div.click()
+
+		//生成人物简介
+		function shengchengrenwujianjia(name, json) {
+			let st = "";
+			rex1 = /\d{0,3}cm/g
+			shengao = rex1.exec(json["身高体重"])
+			rex2 = /\d{0,3}kg/g
+			tizhong = rex2.exec(json["身高体重"])
+			zuopinshuliang = json["预览图"].length
+			if (tizhong) {} else {
+				tizhong = '未知'
+			}
+			st += `<div class="renwudiv" onclick="dianji(this)" style="background: url('yiren/touxiang/${name}.png') center/auto 100% no-repeat border-box border-box">` +
+				`<div class="ziliaoka"><ul>` +
+				`<li><h2>${name}</h2></li>` +
+				`<li><strong>数量</strong>：<span>${zuopinshuliang}</span></li>` +
+				`<li><strong>生日</strong>：<span>${json["生日"]}</span></li>` +
+				`<li><strong>身高</strong>：<span>${shengao}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` +
+				`<strong>体重</strong>：<span>${tizhong}</span></li>` +
+				`<li><strong>微博</strong>：<span><a href="https://weibo.com/u/${json["微博id"]}" target="_blank">微博</a></span></li>` +
+				`<li><strong>微博粉丝量</strong>：<span>${huansuan(json["微博粉丝量"])}</span></li></ul></div></div>`;
+			return st
+		}
+
+		function huansuan(s) {
+			let shuzi = Number(s);
+			let Numjson = {
+				"亿": 100000000,
+				"万": 10000,
+				"": 1
+			};
+			if (shuzi == 0) {
+				return 0
+			};
+			for (v in Numjson) {
+				let kk = Math.round(shuzi / Numjson[v] * 100) / 100;
+				if (kk > 1) {
+					return kk + v;
+					break
+				}
+			}
+		}
+
+		//1.点击生成右边的图片
+		function dianji(e) {
+			h2 = e.querySelector("h2")
+
+			divimgda = document.querySelector(".divimgda")
+			textdiv = document.querySelector(".textdiv")
+			mz = h2.innerText
+			textdiv.innerHTML = mz
+			le = arr[mz]['预览图'].length
+
+			divimgda.innerHTML = ''
+
+			for (var i = 0; i < le; i++) {
+				tupianmingzi = arr[mz]['预览图'][i]
+				pianming = tupianmingzi.split('.')[0]
+				pianming = pianming.split("-")[1]
+				divimgda.innerHTML += `<div class="divimgzhong" style="--b:${i}"><div class="divimgxiao"><img class='ims' src="yiren/imgs/${tupianmingzi}">${pianming}</div></div>`
+
+			}
+			divimgda.innerHTML += `<img class='renwuyuanquan' src="yiren/touxiang/${mz}.png" alt="">`
+			divimgda.innerHTML += `<div class="xiaoyuanquandiv"></div>`
+
+			boxcheck = document.querySelector("#boxcheck")
+			divimgxiaos = document.querySelectorAll(".divimgxiao")
+			console.log(boxcheck.checked)
+
+
+			for (var x = 0; x < divimgxiaos.length; x++) {
+				text = divimgxiaos[x].innerText
+				imgg = divimgxiaos[x].querySelector("img")
+
+				console.log(text)
+				divimgxiaos[x].innerText = "";
+				divimgxiaos[x].appendChild(imgg)
+
+
+				for (var i = 0; i < text.length; i++) {
+					t1 = text[i]
+					span = document.createElement("span")
+					span.innerText = t1
+					r = 12 * i + 270
+					span.style.transform = 'rotate(' + r + 'deg)'
+					divimgxiaos[x].appendChild(span)
+				}
+			}
+
+
+			imgs = document.querySelectorAll(".ims")
+			for (var i = 0; i < imgs.length; i++) {
+				var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+				if (('' + randomColor).length < 6) {
+					randomColor = '#0' + randomColor;
+				} else {
+					randomColor = '#' + randomColor
+				}
+				imgs[i].style.border = `5px solid ${randomColor}`
+
+			}
+
+		}
+
+		//2.保存图片
+		function toImage() {
+
+			html2canvas(document.querySelector("#d1")).then(canvas => {
+				document.body.appendChild(canvas)
+				let dataURL = canvas.toDataURL("image/png");
+				let a = document.createElement("a");
+				a.href = dataURL;
+				a.download = mz;
+				a.click();
+			});
+		}
+
+		//隐藏片名
+		function boxc(e) {
+			var sheet = document.styleSheets[0]
+			console.log(sheet)
+			if (e.checked == true) {
+				sheet.rules[13].style.display = 'none'
+			} else {
+				sheet.rules[13].style.display = ''
+			}
+		}
+	</script>
+</html>
