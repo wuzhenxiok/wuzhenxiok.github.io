@@ -10,7 +10,10 @@
 	<body>
 		
 		<div id="d0">
-
+		<ul class="fenyeul"> </ul>
+		<div id="d00">
+			
+		</div>
 		</div>
 
 		<div id="d1">
@@ -34,22 +37,54 @@
 	</body>
 
 	<script>
-		
-
 
 		var keys = Object.keys(arr)
+		div00 = document.querySelector("#d00")
 
-		div0 = document.querySelector("#d0")
-
-
-		for (var i = 0; i < keys.length; i++) {
-			ss = shengchengrenwujianjia(keys[i], arr[keys[i]])
-			div0.innerHTML += ss
-
+		var meiyehangshu=12
+		var ul2 = document.querySelector(".fenyeul");
+		jianlifenyebiaoqian()
+		
+		
+		
+		//建立分页标签函数
+		function jianlifenyebiaoqian() {
+			ul2.innerHTML = ""
+			var zhi = parseFloat(Object.keys(arr).length / meiyehangshu);
+			var zhengshu = Math.floor(zhi) + 1;
+			var yushu = parseInt(Object.keys(arr).length % meiyehangshu);
+			for (d = 0; d < zhengshu; d++) {
+				var li = document.createElement("li");
+				li.setAttribute("index", d);
+				var txt = document.createTextNode(String(d + 1));
+				li.appendChild(txt);
+				li.addEventListener("click", dianjimeiyiye, false);
+				ul2.appendChild(li)
+			};
+			ul2.children[0].click();
 		}
-
-		div = div0.firstElementChild
+		
+		//加载每一页
+		function dianjimeiyiye() {
+			div00.innerHTML=""
+			for (var zi = 0; zi < ul2.children.length; zi++) {
+				// ul2.children[zi].style.backgroundColor = "white";
+				// ul2.children[zi].style.color = "black";
+				ul2.children[zi].setAttribute("class","whitee")
+			}
+			this.className='redd'
+			// this.style.backgroundColor = "red";
+			var pindex = Number(this.getAttribute("index"));
+		
+			var newlist = Object.keys(arr).slice(pindex * meiyehangshu, (pindex + 1) * meiyehangshu)
+			for (var i = 0; i < newlist.length; i++) {
+				ss = shengchengrenwujianjia(newlist[i], arr[newlist[i]],i)
+				div00.innerHTML += ss
+			
+			}
+		div = div00.firstElementChild
 		div.click()
+		}
 
 		//生成人物简介
 		function shengchengrenwujianjia(name, json) {
@@ -95,6 +130,18 @@
 
 		//1.点击生成右边的图片
 		function dianji(e) {
+			var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+			
+			if (('' + randomColor).length < 6) {
+				randomColor = '#0' + randomColor;
+			} else {
+				randomColor = '#' + randomColor
+			}
+			for (var q=0;q<div00.children.length;q++){
+				div00.children[q].style.boxShadow=""
+			}
+			console.log(e)
+			e.style.boxShadow =`0 0 5px ${randomColor},0 0 25px ${randomColor},0 0 5px ${randomColor},0 0 5px ${randomColor}`
 			h2 = e.querySelector("h2")
 
 			divimgda = document.querySelector(".divimgda")
@@ -117,14 +164,12 @@
 
 			boxcheck = document.querySelector("#boxcheck")
 			divimgxiaos = document.querySelectorAll(".divimgxiao")
-			console.log(boxcheck.checked)
 
 
 			for (var x = 0; x < divimgxiaos.length; x++) {
 				text = divimgxiaos[x].innerText
 				imgg = divimgxiaos[x].querySelector("img")
 
-				console.log(text)
 				divimgxiaos[x].innerText = "";
 				divimgxiaos[x].appendChild(imgg)
 
@@ -149,7 +194,8 @@
 				} else {
 					randomColor = '#' + randomColor
 				}
-				imgs[i].style.border = `5px solid ${randomColor}`
+				imgs[i].style.border = `3px solid ${randomColor}`
+				imgs[i].style.boxShadow =`0 0 5px ${randomColor},0 0 25px ${randomColor},0 0 5px${randomColor},0 0 5px ${randomColor}`
 
 			}
 
@@ -171,12 +217,13 @@
 		//隐藏片名
 		function boxc(e) {
 			var sheet = document.styleSheets[0]
-			console.log(sheet)
 			if (e.checked == true) {
-				sheet.rules[13].style.display = 'none'
+				sheet.rules[18].style.display = 'none'
 			} else {
-				sheet.rules[13].style.display = ''
+				sheet.rules[18].style.display = ''
 			}
 		}
+		
+	
 	</script>
 </html>
