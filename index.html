@@ -8,12 +8,16 @@
 		<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 	</head>
 	<body>
-		
+
 		<div id="d0">
-		<ul class="fenyeul"> </ul>
-		<div id="d00">
+			<ul class="tongji"></ul>
+			<ul class="nianling"></ul>
 			
-		</div>
+			<ul class="fenyeul"> </ul>
+			
+			<div id="d00">
+
+			</div>
 		</div>
 
 		<div id="d1">
@@ -31,62 +35,116 @@
 		</div>
 		<div id="d3">
 			<p>更新日志：</p>
+			<p>2022.09.11 邢菲，虞书欣</p>
 			<p>2022.08.28 全部</p>
 		</div>
 
 	</body>
 
 	<script>
-
-		var keys = Object.keys(arr)
 		div00 = document.querySelector("#d00")
-
-		var meiyehangshu=12
+		var meiyehangshu = 9
+		var ul1 = document.querySelector(".nianling");
 		var ul2 = document.querySelector(".fenyeul");
-		jianlifenyebiaoqian()
+		var ul3=document.querySelector(".tongji");
+		newObj = arr
+		nlarr=['全部',"1960",'1970','1980','1990','2000']
+		zilarr=['全部',"60后",'70后','80后','90后','00后']
+		for (let l = 0, ll = nlarr.length; l < ll; l++) {
+			var li = document.createElement("li");
+			var txt = document.createTextNode(zilarr[l]);
+			li.appendChild(txt);
+			li.setAttribute("value", nlarr[l])
+			li.addEventListener("click", nianlingduan);
+			ul1.appendChild(li)
+		}
+		ul1.children[0].click()
 		
 		
 		
+		
+		
+		
+		
+		length1 = Object.keys(arr).length
+		len2=0
+		for(kk in arr){
+			len2+=arr[kk]["预览图"].length
+		}
+		str1="一共收录了"+length1+"位女星,"+"数量："+len2
+		li=document.createElement("li")
+		txt1=document.createTextNode(str1);
+		li.appendChild(txt1)
+		ul3.appendChild(txt1)
+		jianlifenyebiaoqian(length1)
+		
+		
+		//年龄分类
+		function nianlingduan() {
+			mm = this.value
+			if (mm != 0) {
+				newObj = {};
+				let nl = this.value;
+				for (let key2 in arr) {
+					let nl2 = Number(arr[key2]["生日"].substr(0, 4));
+					if (nl <= nl2 && nl2 <= nl + 9) {
+						newObj[key2] = arr[key2];
+					};
+				};
+			} else {
+				newObj = arr
+			}
+			for (let z = 0, len = ul1.children.length; z < len; z++) {
+				ul1.children[z].setAttribute("class", "whitee")
+			};
+			this.setAttribute("class", "redd");
+			var newlist = Object.keys(newObj)
+			length = newlist.length
+			jianlifenyebiaoqian(length)
+		
+		};
+
+
 		//建立分页标签函数
-		function jianlifenyebiaoqian() {
+		function jianlifenyebiaoqian(length) {
 			ul2.innerHTML = ""
-			var zhi = parseFloat(Object.keys(arr).length / meiyehangshu);
+			var zhi = parseFloat(length / meiyehangshu);
 			var zhengshu = Math.floor(zhi) + 1;
-			var yushu = parseInt(Object.keys(arr).length % meiyehangshu);
+			var yushu = parseInt(length % meiyehangshu);
 			for (d = 0; d < zhengshu; d++) {
 				var li = document.createElement("li");
 				li.setAttribute("index", d);
 				var txt = document.createTextNode(String(d + 1));
 				li.appendChild(txt);
-				li.addEventListener("click", dianjimeiyiye, false);
+				li.addEventListener("click", jiazaimeiyiye, false);
 				ul2.appendChild(li)
 			};
 			ul2.children[0].click();
 		}
-		
+
 		//加载每一页
-		function dianjimeiyiye() {
-			div00.innerHTML=""
+		function jiazaimeiyiye() {
+			div00.innerHTML = ""
 			for (var zi = 0; zi < ul2.children.length; zi++) {
-				// ul2.children[zi].style.backgroundColor = "white";
-				// ul2.children[zi].style.color = "black";
-				ul2.children[zi].setAttribute("class","whitee")
+				ul2.children[zi].setAttribute("class", "whitee")
 			}
-			this.className='redd'
+			this.className = 'redd'
 			// this.style.backgroundColor = "red";
 			var pindex = Number(this.getAttribute("index"));
-		
-			var newlist = Object.keys(arr).slice(pindex * meiyehangshu, (pindex + 1) * meiyehangshu)
+			//数组切片
+			var newlist = Object.keys(newObj).slice(pindex * meiyehangshu, (pindex + 1) * meiyehangshu)
 			for (var i = 0; i < newlist.length; i++) {
-				ss = shengchengrenwujianjia(newlist[i], arr[newlist[i]],i)
+				name = newlist[i]
+				json = newObj[newlist[i]]
+				ss = shengchengrenwujianjia(name, json)
 				div00.innerHTML += ss
-			
+
 			}
-		div = div00.firstElementChild
-		div.click()
+			div = div00.firstElementChild
+			div.click()
 		}
 
-		//生成人物简介
+		//生成每个人物简介
 		function shengchengrenwujianjia(name, json) {
 			let st = "";
 			rex1 = /\d{0,3}cm/g
@@ -97,7 +155,7 @@
 			if (tizhong) {} else {
 				tizhong = '未知'
 			}
-			st += `<div class="renwudiv" onclick="dianji(this)" style="background: url('yiren/touxiang/${name}.png') center/auto 100% no-repeat border-box border-box">` +
+			st += `<div class="renwudiv" onclick="dianjishengchengtupian(this)" style="background: url('yiren/touxiang/${name}.png') center/auto 100% no-repeat border-box border-box">` +
 				`<div class="ziliaoka"><ul>` +
 				`<li><h2>${name}</h2></li>` +
 				`<li><strong>数量</strong>：<span>${zuopinshuliang}</span></li>` +
@@ -129,19 +187,13 @@
 		}
 
 		//1.点击生成右边的图片
-		function dianji(e) {
-			var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-			
-			if (('' + randomColor).length < 6) {
-				randomColor = '#0' + randomColor;
-			} else {
-				randomColor = '#' + randomColor
+		function dianjishengchengtupian(e) {
+			randomColor = racolor()
+			for (var q = 0; q < div00.children.length; q++) {
+				div00.children[q].style.boxShadow = ""
 			}
-			for (var q=0;q<div00.children.length;q++){
-				div00.children[q].style.boxShadow=""
-			}
-			console.log(e)
-			e.style.boxShadow =`0 0 5px ${randomColor},0 0 25px ${randomColor},0 0 5px ${randomColor},0 0 5px ${randomColor}`
+			e.style.boxShadow = `rgb(227, 51, 48) 0px 0px 5px, rgb(227, 51, 48) 0px 0px 25px, rgb(227, 51, 48) 0px 0px 5px, rgb(227, 51, 48) 0px 0px 5px`
+
 			h2 = e.querySelector("h2")
 
 			divimgda = document.querySelector(".divimgda")
@@ -187,15 +239,9 @@
 
 			imgs = document.querySelectorAll(".ims")
 			for (var i = 0; i < imgs.length; i++) {
-				var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-				if (('' + randomColor).length < 6) {
-					randomColor = '#0' + randomColor;
-				} else {
-					randomColor = '#' + randomColor
-				}
+				randomColor = racolor()
 				imgs[i].style.border = `3px solid ${randomColor}`
-				imgs[i].style.boxShadow =`0 0 5px ${randomColor},0 0 25px ${randomColor},0 0 5px${randomColor},0 0 5px ${randomColor}`
+				imgs[i].style.boxShadow = `0 0 5px ${randomColor},0 0 25px ${randomColor},0 0 5px${randomColor},0 0 5px ${randomColor}`
 
 			}
 
@@ -217,13 +263,30 @@
 		//隐藏片名
 		function boxc(e) {
 			var sheet = document.styleSheets[0]
+			for(var sz=0;sz<sheet.rules.length;sz++){
+				if(sheet.rules[sz].selectorText=="#d1 .divimgda .divimgzhong .divimgxiao span"){
+					sz1=sz
+				}
+			}
 			if (e.checked == true) {
-				sheet.rules[18].style.display = 'none'
+				sheet.rules[sz1].style.display = 'none'
 			} else {
-				sheet.rules[18].style.display = ''
+				sheet.rules[sz1].style.display = ''
 			}
 		}
-		
-	
+
+		function racolor() {
+			//生成一个随机数
+			var raa = Math.floor(Math.random() * 16777215)
+			//随机数转16进制
+			var randomColor = raa.toString(16);
+			if (('' + randomColor).length < 6) {
+				randomColor = '#0' + randomColor;
+			} else {
+				randomColor = '#' + randomColor
+			}
+
+			return randomColor
+		}
 	</script>
 </html>
