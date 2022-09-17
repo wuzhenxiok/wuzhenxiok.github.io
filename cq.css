@@ -153,7 +153,16 @@ body{
 
 }
 #d0  #d00 .renwudiv .ziliaoka li:nth-of-type(2) {
-	color:red;
+color:red;
+}
+#d0  #d00 .renwudiv .ziliaoka li:nth-of-type(2) a{
+	border: #000 1px solid;
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	text-align: center;
+	line-height: 15px;
+	
 
 }
 
