@@ -71,7 +71,7 @@
 		for(kk in arr){
 			len2+=arr[kk]["预览图"].length
 		}
-		str1="一共收录了"+length1+"位女星,"+"数量："+len2
+		str1="一共收录了"+length1+"位女星，"+"图片："+len2
 		li=document.createElement("li")
 		txt1=document.createTextNode(str1);
 		li.appendChild(txt1)
@@ -129,7 +129,6 @@
 				ul2.children[zi].setAttribute("class", "whitee")
 			}
 			this.className = 'redd'
-			// this.style.backgroundColor = "red";
 			var pindex = Number(this.getAttribute("index"));
 			//数组切片
 			var newlist = Object.keys(newObj).slice(pindex * meiyehangshu, (pindex + 1) * meiyehangshu)
@@ -157,9 +156,25 @@
 			}
 			st += `<div class="renwudiv" onclick="dianjishengchengtupian(this)" style="background: url('yiren/touxiang/${name}.png') center/auto 100% no-repeat border-box border-box">` +
 				`<div class="ziliaoka"><ul>` +
-				`<li><h2>${name}</h2></li>` +
-				`<li><strong>数量</strong>：<span>${zuopinshuliang}</span></li>` +
-				`<li><strong>生日</strong>：<span>${json["生日"]}</span></li>` +
+				`<li><h2>${name}</h2></li>`
+			if(json["全"]==1){
+				st +=`<li style="background-color:yellow;"><strong>图片</strong>：<span>${zuopinshuliang}								</span>`
+			} else{
+				st +=`<li><strong>图片</strong>：<span>${zuopinshuliang}								</span>`
+			}
+				
+				scolor={
+					's':'pink',
+					'm':'blue',
+					'l':'green',
+					'f':'white',
+					
+				}
+				// for(nn in json["类型"]){
+				// 	console.log(json["类型"][nn])
+				// 	st +=`<a style="background-color:pink;">${json["类型"][nn]}</a>`
+				// }
+				st +=`</li><li><strong>生日</strong>：<span>${json["生日"]}</span></li>` +
 				`<li><strong>身高</strong>：<span>${shengao}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` +
 				`<strong>体重</strong>：<span>${tizhong}</span></li>` +
 				`<li><strong>微博</strong>：<span><a href="https://weibo.com/u/${json["微博id"]}" target="_blank">微博</a></span></li>` +
