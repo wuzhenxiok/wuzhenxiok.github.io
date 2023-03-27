@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="./cq.css">
 		<script src="./cq.js"></script>
 		<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+		
 	</head>
 	<body>
 
@@ -35,9 +36,7 @@
 		</div>
 		<div id="d3">
 			<p>更新日志：</p>
-			<p>2022.09.17 景甜，李一桐</p>
-			<p>2022.09.11 邢菲，虞书欣</p>
-			<p>2022.08.28 全部</p>
+			<p>2023.03.27</p>
 		</div>
 
 	</body>
@@ -48,8 +47,10 @@
 		var ul1 = document.querySelector(".nianling");
 		var ul2 = document.querySelector(".fenyeul");
 		var ul3=document.querySelector(".tongji");
-		newObj = arr
+		console.log(typeof(jsobject))
+		newObj = jsobject
 		nlarr=['全部',"1960",'1970','1980','1990','2000']
+		console.log(typeof(nlarr))
 		zilarr=['全部',"60后",'70后','80后','90后','00后']
 		for (let l = 0, ll = nlarr.length; l < ll; l++) {
 			var li = document.createElement("li");
@@ -61,16 +62,10 @@
 		}
 		ul1.children[0].click()
 		
-		
-		
-		
-		
-		
-		
-		length1 = Object.keys(arr).length
+		length1 = Object.keys(jsobject).length
 		len2=0
-		for(kk in arr){
-			len2+=arr[kk]["预览图"].length
+		for(kk in jsobject){
+			len2+=jsobject[kk]["预览图"].length
 		}
 		str1="一共收录了"+length1+"位女星，"+"图片："+len2
 		li=document.createElement("li")
@@ -86,14 +81,14 @@
 			if (mm != 0) {
 				newObj = {};
 				let nl = this.value;
-				for (let key2 in arr) {
-					let nl2 = Number(arr[key2]["生日"].substr(0, 4));
+				for (let key2 in jsobject) {
+					let nl2 = Number(jsobject[key2]["生日"].substr(0, 4));
 					if (nl <= nl2 && nl2 <= nl + 9) {
-						newObj[key2] = arr[key2];
+						newObj[key2] = jsobject[key2];
 					};
 				};
 			} else {
-				newObj = arr
+				newObj = jsobject
 			}
 			for (let z = 0, len = ul1.children.length; z < len; z++) {
 				ul1.children[z].setAttribute("class", "whitee")
@@ -109,9 +104,13 @@
 		//建立分页标签函数
 		function jianlifenyebiaoqian(length) {
 			ul2.innerHTML = ""
-			var zhi = parseFloat(length / meiyehangshu);
-			var zhengshu = Math.floor(zhi) + 1;
+			var zhi = parseFloat(length / meiyehangshu);			
 			var yushu = parseInt(length % meiyehangshu);
+			if (yushu==0){
+				zhengshu=zhi;
+			}else{
+				zhengshu = Math.floor(zhi) + 1;
+			}
 			for (d = 0; d < zhengshu; d++) {
 				var li = document.createElement("li");
 				li.setAttribute("index", d);
@@ -134,9 +133,11 @@
 			//数组切片
 			var newlist = Object.keys(newObj).slice(pindex * meiyehangshu, (pindex + 1) * meiyehangshu)
 			for (var i = 0; i < newlist.length; i++) {
-				name = newlist[i]
-				json = newObj[newlist[i]]
-				ss = shengchengrenwujianjia(name, json)
+				var atobj=new Object()
+				atobj.name=newlist[i]
+				 atobj.json= newObj[newlist[i]]
+				
+				ss = shengchengrenwujianjia(atobj)
 				div00.innerHTML += ss
 
 			}
@@ -145,20 +146,20 @@
 		}
 
 		//生成每个人物简介
-		function shengchengrenwujianjia(name, json) {
+		function shengchengrenwujianjia(atobj) {
 			let st = "";
 			rex1 = /\d{0,3}cm/g
-			shengao = rex1.exec(json["身高体重"])
+			shengao = rex1.exec(atobj.json["身高体重"])
 			rex2 = /\d{0,3}kg/g
-			tizhong = rex2.exec(json["身高体重"])
-			zuopinshuliang = json["预览图"].length
+			tizhong = rex2.exec(atobj.json["身高体重"])
+			zuopinshuliang = atobj.json["预览图"].length
 			if (tizhong) {} else {
 				tizhong = '未知'
 			}
-			st += `<div class="renwudiv" onclick="dianjishengchengtupian(this)" style="background: url('yiren/touxiang/${name}.png') center/auto 100% no-repeat border-box border-box">` +
+			st += `<div class="renwudiv" onclick="dianjishengchengtupian(this)" style="background: url('logo/${atobj.json["头像"]}') center/auto 100% no-repeat border-box border-box">` +
 				`<div class="ziliaoka"><ul>` +
-				`<li><h2>${name}</h2></li>`
-			if(json["全"]==1){
+				`<li><h2>${atobj.name}</h2></li>`
+			if(atobj.json["全"]==1){
 				st +=`<li style="background-color:yellow;"><strong>图片</strong>：<span>${zuopinshuliang}								</span>`
 			} else{
 				st +=`<li><strong>图片</strong>：<span>${zuopinshuliang}								</span>`
@@ -175,11 +176,11 @@
 				// 	console.log(json["类型"][nn])
 				// 	st +=`<a style="background-color:pink;">${json["类型"][nn]}</a>`
 				// }
-				st +=`</li><li><strong>生日</strong>：<span>${json["生日"]}</span></li>` +
+				st +=`</li><li><strong>生日</strong>：<span>${atobj.json["生日"]}</span></li>` +
 				`<li><strong>身高</strong>：<span>${shengao}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` +
 				`<strong>体重</strong>：<span>${tizhong}</span></li>` +
-				`<li><strong>微博</strong>：<span><a href="https://weibo.com/u/${json["微博id"]}" target="_blank">微博</a></span></li>` +
-				`<li><strong>微博粉丝量</strong>：<span>${huansuan(json["微博粉丝量"])}</span></li></ul></div></div>`;
+				`<li><strong>微博</strong>：<span><a href="https://weibo.com/u/${atobj.json["微博id"]}" target="_blank">微博</a></span></li>` +
+				`<li><strong>微博粉丝量</strong>：<span>${huansuan(atobj.json["微博粉丝量"])}</span></li></ul></div></div>`;
 			return st
 		}
 
@@ -215,19 +216,24 @@
 			divimgda = document.querySelector(".divimgda")
 			textdiv = document.querySelector(".textdiv")
 			mz = h2.innerText
-			textdiv.innerHTML = mz
-			le = arr[mz]['预览图'].length
+			textspan=""
+			for(namen in mz){
+				textspan+=`<span>${mz[namen]}</span>`
+			}
+			textspan+=""
+			textdiv.innerHTML = textspan
+			le = jsobject[mz]['预览图'].length
 
 			divimgda.innerHTML = ''
 
 			for (var i = 0; i < le; i++) {
-				tupianmingzi = arr[mz]['预览图'][i]
+				tupianmingzi = jsobject[mz]['预览图'][i]
 				pianming = tupianmingzi.split('.')[0]
 				pianming = pianming.split("-")[1]
-				divimgda.innerHTML += `<div class="divimgzhong" style="--b:${i}"><div class="divimgxiao"><img class='ims' src="yiren/imgs/${tupianmingzi}">${pianming}</div></div>`
+				divimgda.innerHTML += `<div class="divimgzhong" style="--b:${i}"><div class="divimgxiao"><img class='ims' src="imgs/${tupianmingzi}">${pianming}</div></div>`
 
 			}
-			divimgda.innerHTML += `<img class='renwuyuanquan' src="yiren/touxiang/${mz}.png" alt="">`
+			divimgda.innerHTML += `<img class='renwuyuanquan' src="logo/${mz}.png" alt="">`
 			divimgda.innerHTML += `<div class="xiaoyuanquandiv"></div>`
 
 			boxcheck = document.querySelector("#boxcheck")
@@ -274,26 +280,39 @@
 				a.download = mz;
 				a.click();
 			});
+			
 		}
 
 		//隐藏片名
 		function boxc(e) {
-			var sheet = document.styleSheets[0]
-			for(var sz=0;sz<sheet.rules.length;sz++){
-				if(sheet.rules[sz].selectorText=="#d1 .divimgda .divimgzhong .divimgxiao span"){
-					sz1=sz
-				}
-			}
+			var she=document.querySelectorAll(".divimgxiao span")
+			var xianshi = ""
 			if (e.checked == true) {
-				sheet.rules[sz1].style.display = 'none'
-			} else {
-				sheet.rules[sz1].style.display = ''
+				xianshi='none'
+			} 
+			
+			for(var sz=0;sz<she.length;sz++){
+				she[sz].style.display = xianshi
 			}
+	
+				
+		// 	var sheet = document.styleSheets[0]
+		// 	for(var sz=0;sz<sheet.rules.length;sz++){
+		// 		if(sheet.rules[sz].selectorText=="#d1 .divimgda .divimgzhong .divimgxiao span"){
+		// 			sz1=sz
+		// 		}
+		// 	}
+		// 	if (e.checked == true) {
+		// 		sheet.rules[sz1].style.display = 'none'
+		// 	} else {
+		// 		sheet.rules[sz1].style.display = ''
+		// 	}
 		}
 
 		function racolor() {
 			//生成一个随机数
 			var raa = Math.floor(Math.random() * 16777215)
+			console.log(raa)
 			//随机数转16进制
 			var randomColor = raa.toString(16);
 			if (('' + randomColor).length < 6) {
