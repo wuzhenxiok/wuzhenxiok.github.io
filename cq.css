@@ -8,7 +8,7 @@ body{
 }
 #d0 {
 	margin-left: 30px;
-	width: 640px;
+	width: 700px;
 	height: 900px;
 	border: 3px solid black;
 	float: left;
@@ -97,8 +97,8 @@ body{
 	font-size: 30px;
 }
 #d0 #d00{
-	width: 640px;
-	height: 640px;
+	width: 700px;
+	height: 700px;
 	overflow: hidden;
 	margin-top: 15px;
 
@@ -112,8 +112,8 @@ body{
 	overflow: hidden;
 	position: relative;
 	float: left;
-	margin-top: 5px;
-	margin-left: 10px;
+	margin-top: 25px;
+	margin-left: 25px;
 	cursor: pointer;
 
 }
@@ -175,13 +175,16 @@ color:red;
 	border: 3px solid black;
 
 }
-
 #d1 .textdiv {
-	writing-mode: vertical-rl;
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	font-size: 5vh;
+	width: 50px;
+	height: 200px;
+
+}
+
+#d1 .textdiv span {
+	margin-left: 5px;
+	font-size: 38px;
 	color: #FFF;
 	text-shadow:
 		1px 1px 0 #CCC,
